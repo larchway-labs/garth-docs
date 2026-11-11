@@ -1,0 +1,14 @@
+---
+/** Starlight's site title, with the newest release beside it. */
+import Default from "@astrojs/starlight/components/SiteTitle.astro";
+import { docsVersion } from "../lib/markdown";
+
+const version = docsVersion();
+const label = version ? `v${version}` : "next";
+const title = version ? `These guides describe Garth ${version}, the newest release` : "These guides describe Garth before its first release";
+---
+
+<div class="toft-site-title">
+  <Default />
+  <span class="toft-version" title={title}>{label}</span>
+</div>

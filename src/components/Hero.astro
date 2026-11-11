@@ -1,0 +1,61 @@
+---
+/**
+ * The home page's head, set the way the platform's own landing page sets its
+ * hero: the headline in two tones (the act at full contrast, what it is for a
+ * step quieter), the paragraph and the two ways in beside it, and below them
+ * one ruled card of three numbered steps standing in for an illustration.
+ * Garth is used in a browser, so a step shows what to click, with nothing to copy.
+ *
+ * Only the home page has `hero` frontmatter, so this renders nowhere else.
+ */
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero ?? {};
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+// Garth is used in the browser, so the steps name what to click, not commands.
+const steps = [
+  { n: "01", title: "Open a project", command: "Projects → New project", note: "A project is a git repository: start one, or import one from a trusted source." },
+  { n: "02", title: "Start a session", command: "New session", note: "The agent works in its own sandbox, on its own branch. Ask it for what you want." },
+  { n: "03", title: "Merge the work", command: "Merge into main", note: "Read the changes, then merge them into the project’s default branch." },
+];
+---
+
+<section class="toft-hero">
+  <div class="toft-hero-grid">
+    <div class="toft-hero-title">
+      <p class="toft-eyebrow">Garth documentation</p>
+      <h1 id="_top" set:html={title} />
+    </div>
+    <div class="toft-hero-side">
+      {tagline && <p class="toft-hero-body" set:html={tagline} />}
+      <div class="toft-hero-actions">
+        {
+          actions.map((a, i) => (
+            <a class:list={["toft-button", i === 0 ? "primary" : "outline"]} href={`${base}/${a.link.replace(/^\/+/, "")}`}>
+              {a.text}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <figure class="toft-steps">
+    <figcaption class="sr-only">From a project to merged work in three steps.</figcaption>
+    {
+      steps.map((s) => (
+        <div class="toft-step">
+          <p class="toft-step-head">
+            <span class="toft-num">{s.n}</span>
+            <span>{s.title}</span>
+          </p>
+          <div class="toft-command">
+            <code>{s.command}</code>
+          </div>
+          <p class="toft-step-note">{s.note}</p>
+        </div>
+      ))
+    }
+  </figure>
+</section>
+
