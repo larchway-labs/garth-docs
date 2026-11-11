@@ -11,6 +11,7 @@
  * has to add its page (Garth's release workflow does that).
  */
 import { readdirSync } from "node:fs";
+import { join } from "node:path";
 
 /** The user guide's sections. */
 const user = [{ label: "Get started", items: [{ label: "What Garth is", slug: "user/start/what-garth-is" }, { label: "Signing in", slug: "user/start/signing-in" }, { label: "Your first session", slug: "user/start/first-session" }, { label: "Finding your way around", slug: "user/start/finding-your-way" }] }, { label: "Projects", items: [{ label: "Creating a project", slug: "user/projects/creating" }, { label: "The project page", slug: "user/projects/the-project-page" }, { label: "What the agent reads", slug: "user/projects/what-the-agent-reads" }, { label: "Project settings", slug: "user/projects/settings" }] }, { label: "Sessions", items: [{ label: "The session page", slug: "user/sessions/the-session-page" }, { label: "Committing and merging", slug: "user/sessions/changes-and-merging" }, { label: "The terminal and files", slug: "user/sessions/terminal-and-files" }, { label: "Previewing an app", slug: "user/sessions/previews" }, { label: "Pausing, ending and past sessions", slug: "user/sessions/pausing-and-ending" }] }, { label: "Sharing", items: [{ label: "Sharing a project", slug: "user/sharing/sharing-a-project" }, { label: "Sharing a live session", slug: "user/sharing/sharing-a-session" }, { label: "Groups", slug: "user/sharing/groups" }] }, { label: "Toft", items: [{ label: "Deploying to Toft", slug: "user/toft/deploying" }, { label: "Opening a project from Toft", slug: "user/toft/open-in-garth" }] }, { label: "Your account", items: [{ label: "Your profile", slug: "user/account/your-profile" }, { label: "Usage and budgets", slug: "user/account/usage" }] }];
@@ -20,7 +21,9 @@ const admin = [{ label: "Get started", items: [{ label: "Architecture", slug: "a
 
 /** Every released version with a page, newest first: "0.0.6", "0.0.5", … */
 export function releasedVersions() {
-  const dir = new URL("./content/docs/releases/", import.meta.url);
+  // From the project root: this module is bundled at build time, so a path
+  // relative to it would point inside dist/.
+  const dir = join(process.cwd(), "src/content/docs/releases");
   return readdirSync(dir)
     .map((f) => /^v(\d+)-(\d+)-(\d+)\.mdx?$/.exec(f))
     .filter((m) => m !== null)
